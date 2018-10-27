@@ -1,6 +1,10 @@
 from django.shortcuts import render
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core.urlresolvers import reverse
 from .models import Category, Page
 from .form import CategoryForm, PageForm, UserForm, UserProfileForm
+
 
 
 def index(request):
@@ -36,6 +40,21 @@ def register(request):
                    'profile_form': profile_form,
                    'registered': registered})
 
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                return HttpResponse("Your Rango account is disabled.")
+        else:
+            print("Invalid login details: {0}, {1}".format(username, password))
+            
 
 def show_category(request, category_name_slug):
     context_dict = {}
