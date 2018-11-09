@@ -66,7 +66,7 @@ def user_logout(request):
 
 @login_required
 def restricted(request):
-    return Http
+    return HttpResponse("Since you're logged in, you can see this text!")
 
 def show_category(request, category_name_slug):
     context_dict = {}
