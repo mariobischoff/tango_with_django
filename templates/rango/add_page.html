@@ -10,9 +10,11 @@
     {% endif %}
 {% endblock %}
 
+<link href="{% static 'css/signin.css' %}" rel="stylesheet">
+
 {% block body_block %}
     {% if category %}
-        <h1>Add a Page on {{ category }}</h1>
+        <h2 class="form-signin-heading">Add a Page on {{ category }}</h2>
         <div>
             <form id="page_form" method="post" action="/rango/category/{{ category.slug }}/add_page/">
                 {% csrf_token %}
@@ -21,10 +23,11 @@
                 {% endfor %}
                 {% for field in form.visible_fields %}
                     {{ field.errors }}
-                    {{ field.help_text }}
-                    {{ field }}
+                    {{ field.help_text }}<br>
+                    {{ field }}<br>
                 {% endfor %}
-                <input type="submit" name="submit" value="Add Page">
+                <br>
+                <button class="btn btn-primary" type="submit" name="submit">Add Page</button>
             </form>
         </div>
     {% else %}
