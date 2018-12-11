@@ -4,6 +4,9 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
+from webhose_search import run_query
+
+from webhose_search import run_query
 from .models import Category, Page
 from .form import CategoryForm, PageForm, UserForm, UserProfileForm
 
@@ -141,6 +144,13 @@ def add_page(request, category_name_slug):
     context_dict = {'form': form, 'category': category}
     return render(request, 'rango/add_page.html', context_dict)
 
+def search(request):
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+    return render(request, 'rango/search.html', {'result_list': result_list})
 
 def about(request):
     context_dict = {'my_name': request.user }
