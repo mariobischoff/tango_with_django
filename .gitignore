@@ -1,5 +1,5 @@
 .idea/
 db.sqlite3
 /media/profile_images/
-.key
+webhose.key
 *.pyc
