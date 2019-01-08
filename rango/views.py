@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
@@ -17,6 +17,20 @@ def get_server_side_cookie(request, cookie, default_val=None):
         val = default_val
     return val
 
+def track_url(request):
+    page_id = None
+    url = '/rango/'
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views += 1
+                page.save()
+                url = page.url
+            except:
+                pass
+    return redirect(url)
 
 def visitor_cookie_handler(request):
     visits = int(get_server_side_cookie(request, 'visits', '1'))
@@ -32,7 +46,6 @@ def visitor_cookie_handler(request):
         request.session['last_visit'] = last_visit_cookie
     request.session['visits'] = visits
 
-
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
@@ -41,7 +54,6 @@ def index(request):
     context_dict['visits'] = request.session['visits']
     response = render(request, 'rango/index.html', context_dict)
     return response
-
 
 # def register(request):
 #     registered = False
@@ -93,7 +105,6 @@ def index(request):
 # #     logout(request)
 # #     return HttpResponseRedirect(reverse('index'))
 
-
 @login_required
 def restricted(request):
     return HttpResponse("Since you're logged in, you can see this text!")
@@ -122,7 +133,6 @@ def add_category(request):
         else:
             print(form.errors)
     return render(request, 'rango/add_category.html', {'form': form})
-
 
 def add_page(request, category_name_slug):
     try:

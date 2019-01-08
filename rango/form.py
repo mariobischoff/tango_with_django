@@ -15,14 +15,8 @@ class CategoryForm(forms.ModelForm):
 
 
 class PageForm(forms.ModelForm):
-    title = forms.CharField(max_length=128,
-                            help_text="Please enter the title of the page.",
-                            widget=forms.TextInput(attrs={'class': 'form-control',
-                                                          'placeholder': 'TITLE'}))
-    url = forms.URLField(max_length=200,
-                         help_text="Please enter the URL of the page.",
-                         widget=forms.URLInput(attrs={'class': 'form-control',
-                                                      'placeholder': 'URL'}))
+    title = forms.CharField(max_length=128, widget=forms.TextInput(attrs={'placeholder': 'TITLE', 'size': 50}))
+    url = forms.URLField(max_length=200, widget=forms.URLInput(attrs={'placeholder': 'URL', 'size': 50}))
     views = forms.IntegerField(widget=forms.HiddenInput() , initial=0)
 
     class Meta:
